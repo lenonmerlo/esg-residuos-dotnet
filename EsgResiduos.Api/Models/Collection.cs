@@ -12,6 +12,6 @@ public class Collection
     public string? DestinationHistory { get; set; }
     public CollectionPoint CollectionPoint { get; set; } = null!;
     public WasteType WasteType { get; set; } = null!;
-    public ICollection<Destination> Destinations { get; set; } = new List<Destination>();
-    public ICollection<CollectionAlert> Alerts { get; set; } = new List<CollectionAlert>();
+    public ICollection<Destination> Destinations { get; set; } = [];
+    public ICollection<CollectionAlert> Alerts { get; set; } = [];
 }
