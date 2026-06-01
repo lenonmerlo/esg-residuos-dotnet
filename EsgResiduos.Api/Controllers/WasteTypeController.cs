@@ -16,7 +16,7 @@ public class WasteTypeController(WasteTypeService wasteTypeService) : Controller
 
     [HttpGet]
     [ProducesResponseType(typeof(PagedResponse<WasteTypeResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll([FromBody] int page = 1, [FromBody] int pageSize = 10)
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         PagedResponse<WasteTypeResponse> result = await _wasteTypeService.GetAllAsync(page, pageSize);
         return Ok(result);
