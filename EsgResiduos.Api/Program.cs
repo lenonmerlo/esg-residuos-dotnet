@@ -2,6 +2,7 @@ using System.Text;
 
 using EsgResiduos.Api.Data;
 using EsgResiduos.Api.Exceptions;
+using EsgResiduos.Api.Services;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -30,11 +31,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     });
-
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<WasteTypeService>();
+builder.Services.AddScoped<CollectionPointService>();
+builder.Services.AddScoped<CollectionService>();
+builder.Services.AddScoped<DestinationService>();
+builder.Services.AddScoped<CollectionAlertService>();
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

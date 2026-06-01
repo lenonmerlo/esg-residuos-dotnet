@@ -8,7 +8,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<WasteType>? WasteTypes { get; set; }
     public DbSet<CollectionPoint>? CollectionPoints { get; set; }
-    public DbSet<Destination>? Destination { get; set; }
+    public DbSet<Collection>? Collections { get; set; }
+    public DbSet<Destination>? Destinations { get; set; }
     public DbSet<CollectionAlert>? CollectionAlerts { get; set; }
     public DbSet<User>? Users { get; set; }
 
