@@ -28,16 +28,16 @@ namespace EsgResiduos.Api.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.CapacityKg).HasColumnType("decimal(12,2");
-                entity.Property(e => e.AlertVolumeKg).HasColumnType("decimal(12,2");
-                entity.Property(e => e.OccupiedVolumeKg).HasColumnType("decimal(12,2");
+                entity.Property(e => e.CapacityKg).HasPrecision(12, 2);
+                entity.Property(e => e.AlertVolumeKg).HasPrecision(12, 2);
+                entity.Property(e => e.OccupiedVolumeKg).HasPrecision(12, 2);
                 entity.Property(e => e.Status).IsRequired().HasMaxLength(20);
             });
 
             modelBuilder.Entity<Collection>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.VolumeKg).HasColumnType("decimal(12,2)");
+                entity.Property(e => e.VolumeKg).HasPrecision(12, 2);
                 entity.Property(e => e.Status).IsRequired().HasMaxLength(20);
                 entity.Property(e => e.DestinationHistory).HasMaxLength(4000);
                 entity.HasOne(e => e.CollectionPoint)
@@ -53,7 +53,7 @@ namespace EsgResiduos.Api.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.DestinationName).IsRequired().HasMaxLength(120);
                 entity.Property(e => e.ProcessingType).IsRequired().HasMaxLength(60);
-                entity.Property(e => e.DestinatedVolumeKg).HasColumnType("decimal(12,2");
+                entity.Property(e => e.DestinatedVolumeKg).HasPrecision(12, 2);
                 entity.HasOne(e => e.Collection).WithMany(c => c.Destinations).HasForeignKey(e => e.CollectionId);
             });
 
