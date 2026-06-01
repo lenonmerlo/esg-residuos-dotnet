@@ -9,6 +9,6 @@ public class CollectionPoint
     public decimal OccupiedVolumeKg { get; set; } = 0;
     public string Status { get; set; } = "AVAILABLE";
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-    public ICollection<Collection> Collections { get; set; } = new List<Collection>();
-    public ICollection<CollectionAlert> Alerts { get; set; } = new List<CollectionAlert>();
+    public ICollection<Collection> Collections { get; set; } = [];
+    public ICollection<CollectionAlert> Alerts { get; set; } = [];
 }

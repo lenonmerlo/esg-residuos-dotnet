@@ -1,9 +1,8 @@
-﻿namespace EsgResiduos.Api.Models;
+namespace EsgResiduos.Api.DTOs.Response;
 
-public class WasteType
+public class WasteTypeResponse
 {
     public int Id { get; set; }
     public string WasteCategory { get; set; } = string.Empty;
     public string? Description { get; set; }
-    public ICollection<Collection> Collections { get; set; } = [];
 }
