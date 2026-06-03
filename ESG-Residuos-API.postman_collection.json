@@ -1,0 +1,279 @@
+{
+  "info": {
+    "name": "ESG Resíduos API",
+    "description": "API para gestão de resíduos e reciclagem - FIAP 2025",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5016",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lenon Merlo\",\n  \"email\": \"lenon@esg.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"lenon@esg.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "WasteTypes",
+      "item": [
+        {
+          "name": "Get All WasteTypes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/wastetypes?page=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "wastetypes"], "query": [{ "key": "page", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Get WasteType by Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/wastetypes/1", "host": ["{{baseUrl}}"], "path": ["api", "wastetypes", "1"] }
+          }
+        },
+        {
+          "name": "Create WasteType",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"wasteCategory\": \"PLASTICO\",\n  \"description\": \"Resíduos plásticos recicláveis\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/wastetypes", "host": ["{{baseUrl}}"], "path": ["api", "wastetypes"] }
+          }
+        },
+        {
+          "name": "Update WasteType",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"wasteCategory\": \"PLASTICO\",\n  \"description\": \"Resíduos plásticos recicláveis - atualizado\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/wastetypes/1", "host": ["{{baseUrl}}"], "path": ["api", "wastetypes", "1"] }
+          }
+        },
+        {
+          "name": "Delete WasteType",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/wastetypes/1", "host": ["{{baseUrl}}"], "path": ["api", "wastetypes", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CollectionPoints",
+      "item": [
+        {
+          "name": "Get All CollectionPoints",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/collectionpoints?page=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "collectionpoints"], "query": [{ "key": "page", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Get CollectionPoint by Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/collectionpoints/1", "host": ["{{baseUrl}}"], "path": ["api", "collectionpoints", "1"] }
+          }
+        },
+        {
+          "name": "Create CollectionPoint",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ponto Central FIAP\",\n  \"capacityKg\": 500,\n  \"alertVolumeKg\": 400\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/collectionpoints", "host": ["{{baseUrl}}"], "path": ["api", "collectionpoints"] }
+          }
+        },
+        {
+          "name": "Update CollectionPoint",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ponto Central FIAP - Atualizado\",\n  \"capacityKg\": 600,\n  \"alertVolumeKg\": 500\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/collectionpoints/1", "host": ["{{baseUrl}}"], "path": ["api", "collectionpoints", "1"] }
+          }
+        },
+        {
+          "name": "Delete CollectionPoint",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/collectionpoints/1", "host": ["{{baseUrl}}"], "path": ["api", "collectionpoints", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collections",
+      "item": [
+        {
+          "name": "Get All Collections",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/collections?page=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "collections"], "query": [{ "key": "page", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Get Collection by Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/collections/1", "host": ["{{baseUrl}}"], "path": ["api", "collections", "1"] }
+          }
+        },
+        {
+          "name": "Create Collection",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"collectionPointId\": 1,\n  \"wasteTypeId\": 1,\n  \"volumeKg\": 420\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/collections", "host": ["{{baseUrl}}"], "path": ["api", "collections"] }
+          }
+        },
+        {
+          "name": "Delete Collection",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/collections/1", "host": ["{{baseUrl}}"], "path": ["api", "collections", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Destinations",
+      "item": [
+        {
+          "name": "Get All Destinations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/destinations?page=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "destinations"], "query": [{ "key": "page", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Get Destination by Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/destinations/1", "host": ["{{baseUrl}}"], "path": ["api", "destinations", "1"] }
+          }
+        },
+        {
+          "name": "Create Destination",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"collectionId\": 1,\n  \"destinationName\": \"Cooperativa Verde\",\n  \"processingType\": \"RECICLAGEM\",\n  \"destinatedVolumeKg\": 420\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/destinations", "host": ["{{baseUrl}}"], "path": ["api", "destinations"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CollectionAlerts",
+      "item": [
+        {
+          "name": "Get All CollectionAlerts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/collectionalerts?page=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "collectionalerts"], "query": [{ "key": "page", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Get CollectionAlert by Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/collectionalerts/1", "host": ["{{baseUrl}}"], "path": ["api", "collectionalerts", "1"] }
+          }
+        }
+      ]
+    }
+  ]
+}
