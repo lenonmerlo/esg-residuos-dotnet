@@ -37,6 +37,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         _ = modelBuilder.Entity<Collection>(entity =>
         {
+            _ = entity.ToTable("Collection");
             _ = entity.HasKey(e => e.Id);
             _ = entity.Property(e => e.VolumeKg).HasPrecision(12, 2);
             _ = entity.Property(e => e.Status).IsRequired().HasMaxLength(20);
@@ -51,6 +52,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         _ = modelBuilder.Entity<Destination>(entity =>
         {
+            _ = entity.ToTable("Destination");
             _ = entity.HasKey(e => e.Id);
             _ = entity.Property(e => e.DestinationName).IsRequired().HasMaxLength(120);
             _ = entity.Property(e => e.ProcessingType).IsRequired().HasMaxLength(60);
