@@ -42,12 +42,12 @@ EsgResiduos.Tests/
 
 ```mermaid
 flowchart TB
-    C[Controllers\n(View HTTP/API)] --> VM[ViewModels\n(Regras de negócio)]
-    VM --> M[Models\n(Entidades de domínio)]
-    VM --> DTO[DTOs\n(Request/Response)]
+    C["Controllers<br/>(View HTTP/API)"] --> VM["ViewModels<br/>(Regras de negócio)"]
+    VM --> M["Models<br/>(Entidades de domínio)"]
+    VM --> DTO["DTOs<br/>(Request/Response)"]
     VM --> DB[(AppDbContext / EF Core)]
     DB --> SQL[(SQL Server)]
-    C --> EX[GlobalExceptionHandler\n(ProblemDetails)]
+    C --> EX["GlobalExceptionHandler<br/>(ProblemDetails)"]
     C --> AUTH[JWT AuthN/AuthZ]
 ```
 
