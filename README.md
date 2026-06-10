@@ -199,6 +199,52 @@ Paginação de listagens:
 
 ---
 
+## Guia rápido de teste (Swagger/Postman)
+
+Ordem recomendada para validar fluxo completo:
+
+1. **Auth**
+   - `POST /api/auth/register`
+   - Copiar token e autorizar (`Bearer {token}`)
+   - `POST /api/auth/login`
+
+2. **WasteTypes**
+   - `POST /api/wastetypes`
+   - `GET /api/wastetypes`
+   - `GET /api/wastetypes/{id}`
+   - `PUT /api/wastetypes/{id}`
+
+3. **CollectionPoints**
+   - `POST /api/collectionpoints`
+   - `GET /api/collectionpoints`
+   - `GET /api/collectionpoints/{id}`
+   - `PUT /api/collectionpoints/{id}`
+
+4. **Collections**
+   - `POST /api/collections`
+   - `GET /api/collections`
+   - `GET /api/collections/{id}`
+
+5. **CollectionAlerts**
+   - `GET /api/collectionalerts`
+   - `GET /api/collectionalerts/{id}`
+
+6. **Destinations**
+   - `POST /api/destinations`
+   - `GET /api/destinations`
+   - `GET /api/destinations/{id}`
+
+7. **Deletes (ordem importante)**
+   - `DELETE /api/collections/{id}`
+   - `DELETE /api/collectionpoints/{id}`
+   - `DELETE /api/wastetypes/{id}`
+
+> Use os IDs retornados no `POST` (evite assumir `1`).
+
+Guia detalhado: `docs/TESTE-ENDPOINTS.md`
+
+---
+
 ## Regras importantes de DELETE (estado atual)
 
 Para evitar erro de FK no banco:
