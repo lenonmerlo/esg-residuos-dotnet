@@ -1,6 +1,6 @@
-// GET /api/collectionalerts | GET /api/collectionalerts/{id}
+// View somente leitura — alertas são gerados automaticamente em coletas e destinações.
 using EsgResiduos.Api.DTOs.Response;
-using EsgResiduos.Api.Services;
+using EsgResiduos.Api.ViewModels;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,15 +10,15 @@ namespace EsgResiduos.Api.Controllers;
 [ApiController]
 [Route("api/collectionalerts")]
 [Authorize]
-public class CollectionAlertController(CollectionAlertService collectionAlertService) : ControllerBase
+public class CollectionAlertController(CollectionAlertViewModel collectionAlertViewModel) : ControllerBase
 {
-    private readonly CollectionAlertService _collectionAlertService = collectionAlertService;
+    private readonly CollectionAlertViewModel _collectionAlertViewModel = collectionAlertViewModel;
 
     [HttpGet]
     [ProducesResponseType(typeof(PagedResponse<CollectionAlertResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        PagedResponse<CollectionAlertResponse> result = await _collectionAlertService.GetAllAsync(page, pageSize);
+        PagedResponse<CollectionAlertResponse> result = await _collectionAlertViewModel.GetAllAsync(page, pageSize);
         return Ok(result);
     }
 
@@ -27,7 +27,7 @@ public class CollectionAlertController(CollectionAlertService collectionAlertSer
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
-        CollectionAlertResponse result = await _collectionAlertService.GetByIdAsync(id);
+        CollectionAlertResponse result = await _collectionAlertViewModel.GetByIdAsync(id);
         return Ok(result);
     }
 }

@@ -1,7 +1,7 @@
-// GET /api/collections | GET /api/collections/{id} | POST /api/collections | DELETE /api/collections/{id}
+// View (MVVM): endpoints de coleta. Volume e alertas automáticos ficam no CollectionViewModel.
 using EsgResiduos.Api.DTOs.Request;
 using EsgResiduos.Api.DTOs.Response;
-using EsgResiduos.Api.Services;
+using EsgResiduos.Api.ViewModels;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +11,15 @@ namespace EsgResiduos.Api.Controllers;
 [ApiController]
 [Route("api/collections")]
 [Authorize]
-public class CollectionController(CollectionService collectionService) : ControllerBase
+public class CollectionController(CollectionViewModel collectionViewModel) : ControllerBase
 {
-    private readonly CollectionService _collectionService = collectionService;
+    private readonly CollectionViewModel _collectionViewModel = collectionViewModel;
 
     [HttpGet]
     [ProducesResponseType(typeof(PagedResponse<CollectionResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        PagedResponse<CollectionResponse> result = await _collectionService.GetAllAsync(page, pageSize);
+        PagedResponse<CollectionResponse> result = await _collectionViewModel.GetAllAsync(page, pageSize);
         return Ok(result);
     }
 
@@ -28,7 +28,7 @@ public class CollectionController(CollectionService collectionService) : Control
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
-        CollectionResponse result = await _collectionService.GetByIdAsync(id);
+        CollectionResponse result = await _collectionViewModel.GetByIdAsync(id);
         return Ok(result);
     }
 
@@ -37,7 +37,7 @@ public class CollectionController(CollectionService collectionService) : Control
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Create([FromBody] CollectionRequest request)
     {
-        CollectionResponse result = await _collectionService.CreateAsync(request);
+        CollectionResponse result = await _collectionViewModel.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
@@ -46,7 +46,7 @@ public class CollectionController(CollectionService collectionService) : Control
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id)
     {
-        await _collectionService.DeleteAsync(id);
+        await _collectionViewModel.DeleteAsync(id);
         return NoContent();
     }
 }

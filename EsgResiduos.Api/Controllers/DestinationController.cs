@@ -1,7 +1,7 @@
-// GET /api/destinations | GET /api/destinations/{id} | POST /api/destinations
+// View (MVVM): registra destinação e delega a notificação de descarte ao DestinationViewModel.
 using EsgResiduos.Api.DTOs.Request;
 using EsgResiduos.Api.DTOs.Response;
-using EsgResiduos.Api.Services;
+using EsgResiduos.Api.ViewModels;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +11,15 @@ namespace EsgResiduos.Api.Controllers;
 [ApiController]
 [Route("api/destinations")]
 [Authorize]
-public class DestinationController(DestinationService destinationService) : ControllerBase
+public class DestinationController(DestinationViewModel destinationViewModel) : ControllerBase
 {
-    private readonly DestinationService _destinationService = destinationService;
+    private readonly DestinationViewModel _destinationViewModel = destinationViewModel;
 
     [HttpGet]
     [ProducesResponseType(typeof(PagedResponse<DestinationResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        PagedResponse<DestinationResponse> result = await _destinationService.GetAllAsync(page, pageSize);
+        PagedResponse<DestinationResponse> result = await _destinationViewModel.GetAllAsync(page, pageSize);
         return Ok(result);
     }
 
@@ -28,7 +28,7 @@ public class DestinationController(DestinationService destinationService) : Cont
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
-        DestinationResponse result = await _destinationService.GetByIdAsync(id);
+        DestinationResponse result = await _destinationViewModel.GetByIdAsync(id);
         return Ok(result);
     }
 
@@ -38,7 +38,7 @@ public class DestinationController(DestinationService destinationService) : Cont
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Create([FromBody] DestinationRequest request)
     {
-        DestinationResponse result = await _destinationService.CreateAsync(request);
+        DestinationResponse result = await _destinationViewModel.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 }
