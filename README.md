@@ -4,7 +4,7 @@ API RESTful para gerenciamento de resíduos sólidos com foco em práticas ESG (
 
 ---
 
-## 📋 Sumário
+## Sumário
 
 - [Visão Geral](#visão-geral)
 - [Tecnologias](#tecnologias)
@@ -28,6 +28,7 @@ O **ESG Resíduos** é uma plataforma de gestão ambiental que possibilita:
 - Lançamento de **coletas** com volume (kg) e rastreamento de status
 - Registro de **destinações** (reciclagem, compostagem, descarte controlado etc.)
 - Geração automática de **alertas** quando um ponto de coleta atinge o volume limite configurado
+- **Notificações** automáticas sobre destinação correta dos resíduos ao registrar uma destinação
 - Controle de acesso via **autenticação JWT**
 
 ---
@@ -48,16 +49,22 @@ O **ESG Resíduos** é uma plataforma de gestão ambiental que possibilita:
 
 ## Arquitetura
 
-O projeto segue uma arquitetura em camadas simples dentro de uma única Web API:
+O projeto segue o padrão **MVVM** (Model-View-ViewModel), com separação clara entre apresentação e regras de negócio:
+
+| Camada MVVM | Pasta no projeto | Responsabilidade |
+|---|---|---|
+| **Model** | `Models/` + `Data/` | Entidades do domínio e persistência (EF Core) |
+| **View** | `Controllers/` + `DTOs/` | Exposição HTTP — rotas, contratos de entrada/saída |
+| **ViewModel** | `ViewModels/` | Orquestração da lógica de negócio e transformação Model ↔ View |
 
 ```
 EsgResiduos.Api/
-├── Controllers/        # Camada de entrada HTTP (rotas e respostas)
-├── Services/           # Regras de negócio
-├── Models/             # Entidades do domínio
+├── Controllers/        # View — endpoints REST
+├── ViewModels/         # ViewModel — regras de negócio
+├── Models/             # Model — entidades do domínio
 ├── DTOs/
-│   ├── Request/        # Objetos de entrada (payload das requisições)
-│   └── Response/       # Objetos de saída (payload das respostas)
+│   ├── Request/        # Contratos de entrada (payload das requisições)
+│   └── Response/       # Contratos de saída (payload das respostas)
 ├── Data/               # DbContext (Entity Framework Core)
 ├── Migrations/         # Migrações do banco de dados
 ├── Exceptions/         # Exceções customizadas e handler global
@@ -90,7 +97,7 @@ EsgResiduos.Tests/      # Projeto de testes (xUnit)
 | `CapacityKg` | decimal | Capacidade total em kg |
 | `AlertVolumeKg` | decimal | Volume que dispara alerta |
 | `OccupiedVolumeKg` | decimal | Volume ocupado atualmente |
-| `Status` | string | Status atual (`AVAILABLE`, `FULL`, `ALERT`) |
+| `Status` | string | Status atual (`AVAILABLE`, `NEAR_LIMIT`, `CRITICAL`) |
 | `UpdatedAt` | DateTime | Última atualização |
 
 ---
@@ -137,19 +144,19 @@ EsgResiduos.Tests/      # Projeto de testes (xUnit)
 | `CollectionPointId` | int | Referência ao ponto de coleta |
 | `CollectionId` | int? | Referência à coleta (opcional) |
 | `AlertedAt` | DateTime | Data/hora do alerta |
-| `AlertType` | string | Tipo do alerta (ex.: `CAPACITY_WARNING`) |
+| `AlertType` | string | Tipo do alerta (`LIMIT_REACHED`, `CAPACITY_EXCEEDED`, `DESTINATION_NOTIFICATION`) |
 | `Message` | string | Mensagem descritiva do alerta |
 
 ---
 
 ## Endpoints da API
 
-### 🔐 Auth — `/api/auth`
+### Auth — `/api/auth`
 
 | Método | Rota | Descrição | Auth |
 |---|---|---|---|
-| `POST` | `/api/auth/register` | Cadastra novo usuário | ❌ |
-| `POST` | `/api/auth/login` | Autentica e retorna JWT | ❌ |
+| `POST` | `/api/auth/register` | Cadastra novo usuário | Não |
+| `POST` | `/api/auth/login` | Autentica e retorna JWT | Não |
 
 <details>
 <summary>Exemplo: POST /api/auth/register</summary>
@@ -196,64 +203,63 @@ EsgResiduos.Tests/      # Projeto de testes (xUnit)
 
 ---
 
-### ♻️ Tipos de Resíduo — `/api/wastetypes`
+### Tipos de Resíduo — `/api/wastetypes`
 
 | Método | Rota | Descrição | Auth |
 |---|---|---|---|
-| `GET` | `/api/wastetypes` | Lista todos os tipos (paginado) | ✅ |
-| `GET` | `/api/wastetypes/{id}` | Busca por ID | ✅ |
-| `POST` | `/api/wastetypes` | Cadastra novo tipo | ✅ |
-| `PUT` | `/api/wastetypes/{id}` | Atualiza tipo | ✅ |
-| `DELETE` | `/api/wastetypes/{id}` | Remove tipo | ✅ |
+| `GET` | `/api/wastetypes` | Lista todos os tipos (paginado) | Sim |
+| `GET` | `/api/wastetypes/{id}` | Busca por ID | Sim |
+| `POST` | `/api/wastetypes` | Cadastra novo tipo | Sim |
+| `PUT` | `/api/wastetypes/{id}` | Atualiza tipo | Sim |
+| `DELETE` | `/api/wastetypes/{id}` | Remove tipo | Sim |
 
 ---
 
-### 📍 Pontos de Coleta — `/api/collectionpoints`
+### Pontos de Coleta — `/api/collectionpoints`
 
 | Método | Rota | Descrição | Auth |
 |---|---|---|---|
-| `GET` | `/api/collectionpoints` | Lista todos (paginado) | ✅ |
-| `GET` | `/api/collectionpoints/{id}` | Busca por ID | ✅ |
-| `POST` | `/api/collectionpoints` | Cadastra novo ponto | ✅ |
-| `PUT` | `/api/collectionpoints/{id}` | Atualiza ponto | ✅ |
-| `DELETE` | `/api/collectionpoints/{id}` | Remove ponto | ✅ |
+| `GET` | `/api/collectionpoints` | Lista todos (paginado) | Sim |
+| `GET` | `/api/collectionpoints/{id}` | Busca por ID | Sim |
+| `POST` | `/api/collectionpoints` | Cadastra novo ponto | Sim |
+| `PUT` | `/api/collectionpoints/{id}` | Atualiza ponto | Sim |
+| `DELETE` | `/api/collectionpoints/{id}` | Remove ponto | Sim |
 
 ---
 
-### 🗑️ Coletas — `/api/collections`
+### Coletas — `/api/collections`
 
 | Método | Rota | Descrição | Auth |
 |---|---|---|---|
-| `GET` | `/api/collections` | Lista todas (paginado) | ✅ |
-| `GET` | `/api/collections/{id}` | Busca por ID | ✅ |
-| `POST` | `/api/collections` | Registra nova coleta | ✅ |
-| `DELETE` | `/api/collections/{id}` | Remove coleta | ✅ |
+| `GET` | `/api/collections` | Lista todas (paginado) | Sim |
+| `GET` | `/api/collections/{id}` | Busca por ID | Sim |
+| `POST` | `/api/collections` | Registra nova coleta | Sim |
+| `DELETE` | `/api/collections/{id}` | Remove coleta | Sim |
 
 ---
 
-### 🏭 Destinações — `/api/destinations`
+### Destinações — `/api/destinations`
 
 | Método | Rota | Descrição | Auth |
 |---|---|---|---|
-| `GET` | `/api/destinations` | Lista todas (paginado) | ✅ |
-| `GET` | `/api/destinations/{id}` | Busca por ID | ✅ |
-| `POST` | `/api/destinations` | Registra nova destinação | ✅ |
-| `DELETE` | `/api/destinations/{id}` | Remove destinação | ✅ |
+| `GET` | `/api/destinations` | Lista todas (paginado) | Sim |
+| `GET` | `/api/destinations/{id}` | Busca por ID | Sim |
+| `POST` | `/api/destinations` | Registra nova destinação | Sim |
 
 ---
 
-### 🚨 Alertas — `/api/collectionalerts`
+### Alertas — `/api/collectionalerts`
 
 | Método | Rota | Descrição | Auth |
 |---|---|---|---|
-| `GET` | `/api/collectionalerts` | Lista todos (paginado) | ✅ |
-| `GET` | `/api/collectionalerts/{id}` | Busca por ID | ✅ |
+| `GET` | `/api/collectionalerts` | Lista todos (paginado) | Sim |
+| `GET` | `/api/collectionalerts/{id}` | Busca por ID | Sim |
 
-> Os alertas são gerados automaticamente pelo sistema quando o volume de um ponto de coleta atinge o `AlertVolumeKg` configurado.
+> Os alertas são gerados automaticamente pelo sistema quando o volume de um ponto de coleta atinge o `AlertVolumeKg` configurado. Ao registrar uma destinação, o sistema também cria uma notificação (`DESTINATION_NOTIFICATION`) orientando sobre o descarte correto do resíduo.
 
 ---
 
-### 📄 Paginação
+### Paginação
 
 Todos os endpoints de listagem suportam paginação via query string:
 
@@ -308,7 +314,7 @@ O token expira em **8 horas** (configurável via `appsettings.json`).
 }
 ```
 
-> ⚠️ **Nunca suba a `Jwt:Key` real para o repositório.** Utilize variáveis de ambiente ou `appsettings.Development.json` (já no `.gitignore`) em ambientes sensíveis.
+> Não commite a `Jwt:Key` real. Use variáveis de ambiente ou `appsettings.Development.json`.
 
 ### Variáveis de ambiente (alternativa ao appsettings)
 
@@ -343,15 +349,10 @@ dotnet ef database update
 dotnet run
 ```
 
-A API estará disponível em:
-- `http://localhost:5000`
-- `https://localhost:5001`
+A API sobe em `http://localhost:5016`. O terminal exibe o link do Swagger ao iniciar.
 
-### Swagger UI
-
-Acesse a documentação interativa em:
 ```
-https://localhost:5001/swagger
+http://localhost:5016/swagger
 ```
 
 ---
@@ -416,13 +417,7 @@ dotnet test --collect:"XPlat Code Coverage"
 
 ### Cobertura de testes atual
 
-| Controller | Teste |
-|---|---|
-| `CollectionController` | ✅ |
-| `CollectionPointController` | ✅ |
-| `CollectionAlertController` | ✅ |
-| `DestinationController` | ✅ |
-| `WasteTypeController` | ✅ |
+Cada controller possui ao menos um teste de integração validando status HTTP 200.
 
 ---
 
@@ -435,7 +430,7 @@ A API utiliza um **GlobalExceptionHandler** que padroniza as respostas de erro n
   "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
   "title": "Not Found",
   "status": 404,
-  "detail": "Coleta com ID 99 não encontrada."
+  "title": "Coleta com id 99 não encontrado."
 }
 ```
 

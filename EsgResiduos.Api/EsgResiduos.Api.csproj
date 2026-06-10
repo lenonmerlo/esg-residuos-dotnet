@@ -12,7 +12,19 @@
     <UserSecretsId>ffa03a4b-5236-4be3-b10f-6163280028e1</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
+    <LaunchProfile>http</LaunchProfile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Config\**" />
+    <Compile Remove="Repositories\**" />
+    <Content Remove="Config\**" />
+    <Content Remove="Repositories\**" />
+    <EmbeddedResource Remove="Config\**" />
+    <EmbeddedResource Remove="Repositories\**" />
+    <None Remove="Config\**" />
+    <None Remove="Repositories\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
@@ -37,9 +49,7 @@
     <Folder Include="DTOs\Response\" />
     <Folder Include="DTOs\Request\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="Config\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>
