@@ -4,14 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EsgResiduos.Api.Data;
 
+// Model (MVVM): mapeamento EF Core do domínio de coleta seletiva e destinação de resíduos.
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<WasteType>? WasteTypes { get; set; }
-    public DbSet<CollectionPoint>? CollectionPoints { get; set; }
-    public DbSet<Collection>? Collections { get; set; }
-    public DbSet<Destination>? Destinations { get; set; }
-    public DbSet<CollectionAlert>? CollectionAlerts { get; set; }
-    public DbSet<User>? Users { get; set; }
+    public DbSet<WasteType> WasteTypes { get; set; } = null!;
+    public DbSet<CollectionPoint> CollectionPoints { get; set; } = null!;
+    public DbSet<Collection> Collections { get; set; } = null!;
+    public DbSet<Destination> Destinations { get; set; } = null!;
+    public DbSet<CollectionAlert> CollectionAlerts { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
