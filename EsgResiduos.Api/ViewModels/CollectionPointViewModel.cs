@@ -17,6 +17,7 @@ public class CollectionPointViewModel(AppDbContext context)
         int total = await _context.CollectionPoints.CountAsync();
         List<CollectionPointResponse> items = await _context.CollectionPoints
             .AsNoTracking()
+            .OrderBy(p => p.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(p => new CollectionPointResponse

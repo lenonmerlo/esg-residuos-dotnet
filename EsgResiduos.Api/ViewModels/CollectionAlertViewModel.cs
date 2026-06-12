@@ -18,6 +18,7 @@ public class CollectionAlertViewModel(AppDbContext context)
             .AsNoTracking()
             .Include(a => a.CollectionPoint)
             .OrderByDescending(a => a.AlertedAt)
+            .ThenBy(a => a.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(a => new CollectionAlertResponse

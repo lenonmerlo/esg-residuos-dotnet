@@ -17,6 +17,7 @@ public class DestinationViewModel(AppDbContext context)
         int total = await _context.Destinations.CountAsync();
         List<DestinationResponse> items = await _context.Destinations
             .AsNoTracking()
+            .OrderBy(d => d.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(d => new DestinationResponse
