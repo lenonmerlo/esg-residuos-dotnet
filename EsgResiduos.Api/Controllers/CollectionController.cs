@@ -17,8 +17,14 @@ public class CollectionController(CollectionViewModel collectionViewModel) : Con
 
     [HttpGet]
     [ProducesResponseType(typeof(PagedResponse<CollectionResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
+        if (page < 1 || pageSize < 1 || pageSize > 100)
+        {
+            return BadRequest("Parâmetros de paginação inválidos. Use page >= 1 e pageSize entre 1 e 100.");
+        }
+
         PagedResponse<CollectionResponse> result = await _collectionViewModel.GetAllAsync(page, pageSize);
         return Ok(result);
     }

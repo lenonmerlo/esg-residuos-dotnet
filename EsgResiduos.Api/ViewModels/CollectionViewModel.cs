@@ -19,6 +19,7 @@ public class CollectionViewModel(AppDbContext context)
             .AsNoTracking()
             .Include(c => c.CollectionPoint)
             .Include(c => c.WasteType)
+            .OrderBy(c => c.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(c => new CollectionResponse

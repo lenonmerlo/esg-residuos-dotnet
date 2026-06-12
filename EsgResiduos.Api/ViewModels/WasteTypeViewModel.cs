@@ -17,6 +17,7 @@ public class WasteTypeViewModel(AppDbContext context)
         int total = await _context.WasteTypes.CountAsync();
         List<WasteTypeResponse> items = await _context.WasteTypes
             .AsNoTracking()
+            .OrderBy(w => w.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(w => new WasteTypeResponse
