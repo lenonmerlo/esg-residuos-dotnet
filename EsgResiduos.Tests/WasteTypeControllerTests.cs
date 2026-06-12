@@ -21,4 +21,15 @@ public class WasteTypeControllerTests(WebApplicationFactory<Program> factory)
         response.EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
+
+    [Fact]
+    public async Task GetAll_WithInvalidPagination_ReturnsHttpStatusCode400()
+    {
+        string token = await AuthTestHelper.RegisterAndGetTokenAsync(_client);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpResponseMessage response = await _client.GetAsync("/api/wastetypes?page=0&pageSize=10");
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 }
