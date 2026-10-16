@@ -12,6 +12,8 @@ API REST em ASP.NET Core para gestão de resíduos com foco ESG: pontos de colet
 - JWT Bearer Authentication
 - Swagger/OpenAPI
 - xUnit (projeto de testes)
+- Reqnroll/Gherkin (BDD)
+- JsonSchema.Net (testes de contrato JSON Schema)
 - Docker (Dockerfile)
 
 ---
@@ -277,9 +279,36 @@ A API usa handler global e responde em formato Problem Details.
 
 Projeto: `EsgResiduos.Tests`
 
+A suíte combina testes de integração xUnit com cenários BDD executáveis em
+Reqnroll. A API sobe em memória por meio de `WebApplicationFactory`, usa o
+provider InMemory do Entity Framework e não precisa de SQL Server, Docker ou
+servidor iniciado separadamente.
+
 ```powershell
-dotnet test
+dotnet restore
+dotnet test EsgResiduos.sln
 ```
+
+Para salvar uma evidência compatível com Visual Studio, Azure DevOps e outras
+ferramentas de CI:
+
+```powershell
+dotnet test EsgResiduos.sln --logger "trx;LogFileName=resultado-testes.trx"
+```
+
+### Cobertura funcional
+
+- Cenários Gherkin: `EsgResiduos.Tests/Features/GestaoResiduos.feature`;
+- Steps executáveis: `EsgResiduos.Tests/Steps/GestaoResiduosSteps.cs`;
+- Contratos: `EsgResiduos.Tests/Schemas/*.schema.json`;
+- autenticação positiva e negativa;
+- autorização JWT para os cinco recursos protegidos;
+- todos os 20 endpoints da API (status HTTP e corpo JSON quando aplicável);
+- ciclo ESG completo, incluindo alerta de capacidade e notificação de destinação;
+- paginação inválida nas cinco listagens.
+
+O GitHub Actions executa a mesma suíte a cada `push` e `pull_request` e publica
+o arquivo TRX como artefato, inclusive quando houver falha.
 
 ---
 

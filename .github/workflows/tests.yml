@@ -1,0 +1,36 @@
+name: Testes automatizados
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restaurar dependências
+        run: dotnet restore EsgResiduos.sln
+
+      - name: Compilar
+        run: dotnet build EsgResiduos.sln --configuration Release --no-restore
+
+      - name: Executar testes BDD, API e contrato
+        run: dotnet test EsgResiduos.sln --configuration Release --no-build --logger "trx;LogFileName=resultado-testes.trx"
+
+      - name: Publicar evidência TRX
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultado-testes
+          path: '**/TestResults/resultado-testes.trx'

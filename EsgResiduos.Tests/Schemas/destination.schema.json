@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "collectionId", "destinatedAt", "destinationName", "processingType", "destinatedVolumeKg"],
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "collectionId": { "type": "integer", "minimum": 1 },
+    "destinatedAt": { "type": "string", "format": "date-time" },
+    "destinationName": { "type": "string", "minLength": 1 },
+    "processingType": { "type": "string", "minLength": 1 },
+    "destinatedVolumeKg": { "type": "number", "exclusiveMinimum": 0 }
+  },
+  "additionalProperties": false
+}
