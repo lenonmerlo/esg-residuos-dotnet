@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "name", "capacityKg", "alertVolumeKg", "occupiedVolumeKg", "status", "updatedAt"],
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "capacityKg": { "type": "number", "exclusiveMinimum": 0 },
+    "alertVolumeKg": { "type": "number", "exclusiveMinimum": 0 },
+    "occupiedVolumeKg": { "type": "number", "minimum": 0 },
+    "status": { "enum": ["AVAILABLE", "NEAR_LIMIT", "CRITICAL"] },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

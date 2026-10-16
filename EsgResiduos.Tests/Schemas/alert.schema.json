@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "collectionPointId", "collectionPointName", "collectionId", "alertedAt", "alertType", "message"],
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "collectionPointId": { "type": "integer", "minimum": 1 },
+    "collectionPointName": { "type": "string", "minLength": 1 },
+    "collectionId": { "type": ["integer", "null"], "minimum": 1 },
+    "alertedAt": { "type": "string", "format": "date-time" },
+    "alertType": { "type": "string", "minLength": 1 },
+    "message": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

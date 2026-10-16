@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["data", "page", "pageSize", "totalCount", "totalPages"],
+  "properties": {
+    "data": { "type": "array", "items": { "type": "object", "required": ["id", "collectionPointId", "collectionPointName", "collectionId", "alertedAt", "alertType", "message"] } },
+    "page": { "type": "integer", "minimum": 1 },
+    "pageSize": { "type": "integer", "minimum": 1, "maximum": 100 },
+    "totalCount": { "type": "integer", "minimum": 0 },
+    "totalPages": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

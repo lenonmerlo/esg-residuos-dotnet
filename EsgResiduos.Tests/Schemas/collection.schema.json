@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "collectionPointId", "collectionPointName", "wasteTypeId", "wasteCategory", "collectedAt", "volumeKg", "status"],
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "collectionPointId": { "type": "integer", "minimum": 1 },
+    "collectionPointName": { "type": "string", "minLength": 1 },
+    "wasteTypeId": { "type": "integer", "minimum": 1 },
+    "wasteCategory": { "type": "string", "minLength": 1 },
+    "collectedAt": { "type": "string", "format": "date-time" },
+    "volumeKg": { "type": "number", "exclusiveMinimum": 0 },
+    "status": { "enum": ["OPEN", "DESTINATED"] }
+  },
+  "additionalProperties": false
+}
